@@ -1,6 +1,6 @@
 import java.io.*;
 
-enum TokenType{ NUM,SOMA, MULT,APar,FPar, EOF}
+enum TokenType{ NUM, SOMA, MULT, SUB, DIV, APar, FPar, EOF}
 
 class Token{
   String lexema;
@@ -96,6 +96,10 @@ class AnaliseLexica {
 					return (new Token (string,TokenType.SOMA));
 				case "*":
 					return (new Token (string,TokenType.MULT));
+				case "-":
+					return (new Token (string,TokenType.SUB));
+				case "/":
+					return (new Token (string,TokenType.DIV));
 				default: throw (new Exception("Sequencia de caracteres inválida: " + (string)));
 			}
 	}
