@@ -15,11 +15,17 @@ public class MaquinaPilha {
     var arquivo = new BufferedReader(new FileReader(args[0]));
     while (true) {
       var read_line = arquivo.readLine();
+      if (read_line == null || read_line.length() == 0) {
+        break;
+      }
       var line = read_line.split(" ");
       
       // Only operand that has more than one parameter is the PUSH
       if (line.length > 1 && line[0].equals("PUSH")){
         memory.push(Integer.parseInt(line[1]));
+      }
+      else if (line[0].equals("PRINT")) {
+        System.err.println(memory.pop());
       }
       else {
         var v1 = memory.pop();
@@ -37,15 +43,13 @@ public class MaquinaPilha {
           case "MULT":
             memory.push(v1 / v2);
             break;
-          case "PRINT":
-            System.out.println(memory.pop());
           default:
             System.err.println("Operador inesperado: " + line[0]);
             break;
         }
       }
-      arquivo.close();
     }
+    arquivo.close();
 
   }
 }
