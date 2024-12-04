@@ -1,15 +1,8 @@
 import java.io.*;
 
-enum TokenType{ NUM, SOMA, MULT, SUB, DIV, APar, FPar, EOF}
+enum TokenType{ NUM, SOMA, MULT, SUB, DIV, APar, FPar, EOF};
 
-class Token{
-  String lexema;
-  TokenType token;
-
- Token (String l, TokenType t)
- 	{ lexema=l;token = t;}	
-
-}
+public record Token(String lexema, TokenType token){};
 
 class AnaliseLexica {
 
@@ -43,7 +36,7 @@ class AnaliseLexica {
 
 	Token getNextToken() throws Exception
 	{	
-		Token token;
+		// Token token;
 		int eof = -1;
 		String currchar1;
 		String current_string = "";

@@ -21,32 +21,28 @@ public class MaquinaPilha {
       var line = read_line.split(" ");
       
       // Only operand that has more than one parameter is the PUSH
-      if (line.length > 1 && line[0].equals("PUSH")){
-        memory.push(Integer.parseInt(line[1]));
+      if (line.length == 0) {
+        return;
       }
-      else if (line[0].equals("PRINT")) {
-        System.err.println(memory.pop());
-      }
-      else {
-        var v1 = memory.pop();
-        var v2 = memory.pop();
-        switch (line[0]) {
-          case "DIV":
-            memory.push(v1 / v2);
-            break;
-          case "SUM":
-            memory.push(v1 + v2);
-            break;
-          case "SUB":
-            memory.push(v1 - v2);
-            break;
-          case "MULT":
-            memory.push(v1 / v2);
-            break;
-          default:
-            System.err.println("Operador inesperado: " + line[0]);
-            break;
+      
+      switch (line[0]) {
+        case "PUSH" -> {
+          assert line.length > 1;
+          memory.push(Integer.parseInt(line[1]));
         }
+        case "PRINT" -> System.out.println(memory.pop());
+        default -> {
+          var v1 = memory.pop();
+          var v2 = memory.pop();
+          switch (line[0]) {
+            case "DIV" -> memory.push(v1 / v2);
+            case "SUM" -> memory.push(v1 + v2);
+            case "SUB" -> memory.push(v1 - v2);
+            case "MULT" -> memory.push(v1 / v2);
+            default -> System.err.println("Operador inesperado: " + line[0]);
+          };
+          }
+        
       }
     }
     arquivo.close();

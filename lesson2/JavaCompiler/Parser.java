@@ -13,7 +13,7 @@ class Parser{
 
 		ArvoreSintatica resultado = Exp();
 		Token tokenCorrente = scanner.getNextToken();
-		if(tokenCorrente.token != TokenType.EOF)
+		if(tokenCorrente.token() != TokenType.EOF)
 					throw (new Exception("Estava esperando: EOF"));
 
 		return resultado;
@@ -24,11 +24,11 @@ class Parser{
 	{       Exp exp1, exp2;
 		Token tokenCorrente =  scanner.getNextToken();
 
-		if(tokenCorrente.token == TokenType.NUM)
-			return new Num(Integer.parseInt(tokenCorrente.lexema+""));
+		if(tokenCorrente.token() == TokenType.NUM)
+			return new Num(Integer.parseInt(tokenCorrente.lexema()+""));
 		
 		
-		if(tokenCorrente.token == TokenType.APar)
+		if(tokenCorrente.token() == TokenType.APar)
 			{
 				exp1 = Exp();
 				if(exp1 == null)
@@ -46,7 +46,7 @@ class Parser{
 				op.arg1 = exp1;
 				op.arg2 = exp2;
 				tokenCorrente =  scanner.getNextToken();
-				if(tokenCorrente.token != TokenType.FPar)
+				if(tokenCorrente.token() != TokenType.FPar)
 					throw (new Exception("Estava esperando:)"));
 				return op;
 								
@@ -60,7 +60,7 @@ class Parser{
 		{
 		
 		Token tokenCorrente = scanner.getNextToken();
-		switch(tokenCorrente.token){
+		switch(tokenCorrente.token()){
 			case SOMA:
 				return new Soma(null,null);
 			case MULT:
