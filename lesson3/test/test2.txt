@@ -1,0 +1,21 @@
+void main {
+  let float num;
+  num := readIO();
+  if (num < 0) {
+    return;
+  }
+  printIO(fibo(num));
+}
+
+def float fibo(float num) {
+  if (num == 0) {
+    return 0;
+  }
+  if (num == 1) {
+    return 1;
+  }
+  return fibo(num) + fibo(num - 1);
+}
+
+
+

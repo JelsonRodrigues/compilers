@@ -1,0 +1,12 @@
+void main{
+	let float num;
+	num := readIO();
+	printIO greater_than_1000(num);
+}
+
+def bool greater_than_1000(float num) {
+  if (num > 1000) {
+    return true;
+  }
+  return false;
+}
