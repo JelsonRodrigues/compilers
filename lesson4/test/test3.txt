@@ -1,0 +1,17 @@
+void main {
+  let bool Num;
+  Num := readIO();
+  printIO Num;
+
+  while (Num < 100) do {
+    Num := (Num + 1) ;
+  };
+}
+
+def float factorial(float num) {
+  if (num == 0) {
+    return 1;
+  };
+
+  return (num * fibo((num - 1)));
+}
