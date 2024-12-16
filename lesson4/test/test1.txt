@@ -1,0 +1,9 @@
+void main {
+  let bool Num;
+  Num := readIO();
+  printIO Num;
+
+  while (Num < 100) do {
+    Num := (Num + 1) ;
+  };
+}
