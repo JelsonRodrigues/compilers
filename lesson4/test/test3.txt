@@ -3,9 +3,8 @@ void main {
   Num := readIO();
   printIO Num;
 
-  while (Num < 100) do {
-    Num := (Num + 1) ;
-  };
+  Num := factorial(num);
+  printIO Num;
 }
 
 def float factorial(float num) {
