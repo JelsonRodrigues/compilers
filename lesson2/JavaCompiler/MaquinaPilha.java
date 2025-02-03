@@ -35,10 +35,10 @@ public class MaquinaPilha {
           var v1 = memory.pop();
           var v2 = memory.pop();
           switch (line[0]) {
-            case "DIV" -> memory.push(v1 / v2);
+            case "DIV" -> memory.push(v2 / v1);
             case "SUM" -> memory.push(v1 + v2);
-            case "SUB" -> memory.push(v1 - v2);
-            case "MULT" -> memory.push(v1 / v2);
+            case "SUB" -> memory.push(v2 - v1);
+            case "MULT" -> memory.push(v1 * v2);
             default -> System.err.println("Operador inesperado: " + line[0]);
           };
           }
