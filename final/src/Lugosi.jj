@@ -1,0 +1,229 @@
+PARSER_BEGIN(Lugosi)
+import java.io.*;
+import ast.*;
+
+public class Lugosi {
+
+  public static void main(String args[]) throws ParseException,IOException {
+    
+  Lugosi analisador = new Lugosi(new FileInputStream(args[0]));
+  var prog = analisador.Lugosi();
+  }
+
+}
+
+PARSER_END(Lugosi)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+  <MAIN: "main">
+| <ACHAVES: "{">
+| <FCHAVES: "}">
+| <VOID: "void">
+| <LET: "let">
+| <SEMICOLON: ";">
+| <TYPE_FLOAT: "float">
+| <TYPE_BOOL: "bool">
+| <ASSINGMENT: ":=">
+| <OPEN_PARENTHESIS: "(">
+| <CLOSE_PARENTHESIS: ")">
+| <IF: "if">
+| <WHILE: "while">
+| <DO: "do">
+| <READIO: "readIO">
+| <RETURN: "return">
+| <PRINTIO: "printIO">
+| <TRUE: "true">
+| <FALSE: "false">
+| <OP_PLUS: "+">
+| <OP_MINUS: "-">
+| <OP_MULTIPLICATION: "*">
+| <OP_DIVISION: "/">
+| <OP_LOGIC_AND: "&&">
+| <OP_LOGIC_OR: "||">
+| <COMPARISON_LESS_THAN: "<">
+| <COMPARISON_GREATER_THAN: ">">
+| <COMPARISON_EQUALS: "==">
+| <COMMA: ",">
+| <DEF: "def">
+}
+
+TOKEN :
+{
+  <NUM : (["0"-"9"])+ ("."(["0"-"9"])+)? ("E"("+" | "-")? (["0"-"9"])+)?>
+ |< ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ( ["a"-"z","A"-"Z","0"-"9", "_"])*>
+}
+
+
+
+Prog Lugosi () :
+{
+  Main main_gen;
+  ArrayList<Fun> functions=new ArrayList();
+}
+{
+(
+  main_gen=main() (functions=func())? <EOF> 
+)
+{return new Prog(main_gen, functions);}
+}
+
+Main main () : 
+{
+  ArrayList<VarDecl> vars_gen = new ArrayList();
+  ArrayList<Comando> coms_gen = new ArrayList();
+}
+{
+  (<VOID> <MAIN> <ACHAVES> vars_gen=vardecl() coms_gen=seqcomandos() <FCHAVES>)
+  {return new Main(vars_gen, coms_gen);}
+}
+
+ArrayList<VarDecl> vardecl() :
+{
+  ArrayList<VarDecl> building_vars = new ArrayList();
+  String type;
+  Token id;
+}
+{
+  (<LET> type=tipo() id=<ID> <SEMICOLON> {building_vars.append(new VarDecl(type, id));})*
+  {return building_vars;}
+}
+
+String tipo() :
+{}
+{
+  <VOID> {return "VOID";} 
+  | <TYPE_BOOL> {return "BOOL";} 
+  | <TYPE_FLOAT> {return "FLOAT";}
+}
+
+ArrayList<Comando> seqcomandos() :
+{
+  ArrayList<Comando> coms_building = new ArrayList();
+  Comando com;
+}
+{
+  (com=comando() {coms_building.append(com);})*
+  {return coms_building;}
+}
+
+Comando comando() :
+{
+  Token id;
+  Exp exp;
+  Comando com;
+}
+{
+  (id=<ID> com=idL(id.image, id.beginLine) 
+  | <IF> exp=exp() <ACHAVES> seqcomandos() <FCHAVES> <SEMICOLON>
+  | <WHILE> exp() <DO> <ACHAVES> seqcomandos() <FCHAVES> <SEMICOLON>
+  | <RETURN> exp() <SEMICOLON>
+  | <PRINTIO> exp() <SEMICOLON>)
+}
+
+Comando idL(String var, int line) :
+{
+  Comando com;
+  Exp exp;
+  ArrayList<Exp> building_exp = new ArrayList();
+}
+{
+  <ASSINGMENT> com=assignmentL(var, line) {return com;}
+  | <OPEN_PARENTHESIS> (listaexp(building_exp))? <CLOSE_PARENTHESIS> <SEMICOLON> { return new EChamadaFun(line, var, building_exp);}
+}
+
+Comando assignmentL(String var, int line) :
+{}
+{
+(exp=exp() <SEMICOLON> {return new CAtribuicao(line, var, exp);}
+| <READIO> <OPEN_PARENTHESIS> <CLOSE_PARENTHESIS> <SEMICOLON> {return new CReadInput(line, var);}
+)
+}
+
+Exp exp() :
+{
+  Exp ex1;
+  Exp ex2;
+  String op;
+}
+{
+  (<OPEN_PARENTHESIS> ex1=exp() op=op() ex2=exp() <CLOSE_PARENTHESIS> {return new EOpExp(op, ex1, ex2);}
+  | ex1=fator() {return ex1;})
+}
+
+Exp fator(Exp exp) :
+{
+  Token id;
+  boolean matched_func = false;
+  ArrayList<Exp> building_exp = new ArrayList();
+}
+{
+  id=<ID> (<OPEN_PARENTHESIS> (building_exp=listaexp(building_exp))? <CLOSE_PARENTHESIS> {matched_func=true;})? 
+  {
+    if (matched_func) {
+      return new EChamadaFun(id.image, building_exp);
+    }
+    return new EVar(id.image);
+  }
+  | id=<NUM> {return new EFloat(Float.parse(id.image));}
+  | <TRUE> {return new ETrue();}
+  | <FALSE> {return new EFalse();}
+}
+
+String op(String operation) :
+{}
+{
+  <OP_PLUS> { return "+";}
+  | <OP_MINUS> { return "-";}
+  | <OP_MULTIPLICATION> { return "*";}
+  | <OP_DIVISION> { return "/";}
+  | <OP_LOGIC_AND> { return "&&";}
+  | <OP_LOGIC_OR> { return "||";}
+  | <COMPARISON_EQUALS> { return "==";}
+  | <COMPARISON_LESS_THAN> { return "<=";}
+  | <COMPARISON_GREATER_THAN> { return ">=";}
+}
+
+ArrayList<Exp> listaexp(ArrayList<Exp> building_exp) :
+{Exp ex1;
+Exp ex2;}
+{
+  (ex1=exp() {building_exp.append(ex1);} (<COMMA> ex2=exp() {building_exp.append(ex2);})*)
+  {return building_exp;}
+}
+
+
+ArrayList<Fun> func () :
+{
+  String type;
+  ArrayList<Fun> building_functions = new ArrayList();
+  ArrayList<ParamFormalFun> args;
+  ArrayList<VarDecl> vardecl;
+  ArrayList<Comando> commands;
+  Token id;
+}
+{
+  (<DEF> type=tipo() id=<ID> <OPEN_PARENTHESIS> (args=listaarg())? <CLOSE_PARENTHESIS> <ACHAVES> vardecl=vardecl() commands=seqcomandos() <FCHAVES> 
+  {building_functions.append(new Fun(id.image, args, type, vardecl, commands));}
+  )+
+  {return building_functions;}
+}
+
+ArrayList<ParamFormalFun> listaarg():
+{
+  ArrayList<ParamFormalFun> building_args = new ArrayList();
+  String type;
+  Token id;
+}
+{
+  type=tipo() id=<ID> {building_args.append(new ParamFormalFun(type, id.image));} (<COMMA> type=tipo() id=<ID> {building_args.append(new ParamFormalFun(type, id.image));})*
+  {return building_args;}
+}
