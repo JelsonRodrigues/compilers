@@ -8,4 +8,19 @@ public class VarDecl{
    	this.type = type;
    	this.var = var;
    }
+
+   public String toString() {
+      String out;
+
+      out = switch (type) {
+         case "FLOAT" -> "f32";
+         case "BOOL" -> "bool";
+         case "VOID" -> "unit";
+         default -> throw new RuntimeException("No translation for type");
+      };
+
+      out += " " + var;
+
+      return out;
+   }
 }

@@ -10,5 +10,13 @@ public class Prog{
         this.main = main;
         this.fun = fun;
     }
+
+    public String toString() {
+        var out = main.toString();
+        for (Fun function : fun) {
+            out = out + function.toString();
+        }
+        return out;
+    }
 }
 

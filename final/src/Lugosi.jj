@@ -8,6 +8,8 @@ public class Lugosi {
     
   Lugosi analisador = new Lugosi(new FileInputStream(args[0]));
   var prog = analisador.Lugosi();
+  
+  System.out.println(prog);
   }
 
 }

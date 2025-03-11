@@ -13,4 +13,20 @@ public class Main{
 		this.coms = coms;
 	}
 
+	public String toString() {
+		String out = "pub fn main() -> {";
+
+		for (VarDecl var : vars) {
+			out = out + var.toString();
+		}
+		
+		for (Comando com : coms) {
+			out = out + com.toString();
+		}
+
+		out = out + "}";
+
+		return out;
+	}
+
 }
