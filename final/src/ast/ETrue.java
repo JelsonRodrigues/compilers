@@ -9,4 +9,8 @@ public class ETrue extends Exp{
 	  
 	} 
 
+	public String toString(){
+		return "true";
+	}
+
 }

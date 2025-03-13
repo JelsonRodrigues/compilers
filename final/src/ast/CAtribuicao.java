@@ -13,4 +13,8 @@ public class CAtribuicao extends Comando{
 	  this.exp = exp;
 	} 
 
+	public String toString() {
+		return var + "=" + exp.toString() + ";";
+	}
+
 }

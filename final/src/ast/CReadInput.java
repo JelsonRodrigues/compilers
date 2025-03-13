@@ -12,4 +12,10 @@ public class CReadInput extends Comando{
 	  this.var = var;
 	} 
 
+	public String toString() {
+		String out = "let mut " + var + " = String::new();";
+		out += "std::io::stdin().read_line(&mut "+var+").expect(\"error reading user input\");";
+		return out;
+	}
+
 }

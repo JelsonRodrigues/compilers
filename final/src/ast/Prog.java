@@ -13,8 +13,9 @@ public class Prog{
 
     public String toString() {
         var out = main.toString();
+        out += "\n";
         for (Fun function : fun) {
-            out = out + function.toString();
+            out = out + function.toString() + "\n";
         }
         return out;
     }

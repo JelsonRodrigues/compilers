@@ -11,4 +11,8 @@ public class EFloat extends Exp{
 	  
 	} 
 
+	public String toString() {
+		return "" + value;
+	}
+
 }

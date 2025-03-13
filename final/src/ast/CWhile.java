@@ -14,4 +14,14 @@ public class CWhile extends Comando{
 	  this.bloco = bloco;
 	} 
 
+	public String toString(){
+		String out = "while " + exp.toString() + " {\n" ;
+
+		for (var com:bloco) {
+			out += com.toString() + "\n";
+		}
+
+		return out + "\n};";
+	}
+
 }

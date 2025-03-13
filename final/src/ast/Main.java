@@ -14,17 +14,17 @@ public class Main{
 	}
 
 	public String toString() {
-		String out = "pub fn main() -> {";
+		String out = "pub fn main() -> () {\n";
 
 		for (VarDecl var : vars) {
-			out = out + var.toString();
+			out = out + var.toString() + "\n";
 		}
 		
 		for (Comando com : coms) {
-			out = out + com.toString();
+			out = out + com.toString() + "\n";
 		}
 
-		out = out + "}";
+		out = out + "\n}";
 
 		return out;
 	}

@@ -11,5 +11,14 @@ public class EChamadaFun extends Exp{
 	  this.fun = fun;
 	  this.args = args;
 	} 
+	public String toString() {
+		String out = fun + "(";
 
+		for (var arg : args){
+			out += arg.toString() + ",";
+		}
+		out += ")";
+		return out;
+
+	}
 }

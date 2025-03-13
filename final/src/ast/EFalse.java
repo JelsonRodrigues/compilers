@@ -9,4 +9,8 @@ public class EFalse extends Exp{
 	  
 	} 
 
+	public String toString() {
+		return "false";
+	}
+
 }

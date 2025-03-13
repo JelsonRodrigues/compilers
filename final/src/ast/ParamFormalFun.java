@@ -8,4 +8,10 @@ public class ParamFormalFun{
    	this.type = type;
    	this.var = var;
    }
+
+   public String toString() {
+      String out = var + ":" + Fun.lugosiToRustType(type);
+
+      return out;
+   }
 }

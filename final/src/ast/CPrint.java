@@ -11,7 +11,11 @@ public class CPrint extends Comando{
 	{
 	  this.linha = linha;
 	  this.exp = exp;
-	  
 	} 
+
+	public String toString() {
+		String out = "println!(\"{:?}\"," + exp.toString() + ");";
+		return out;
+	}
 
 }
