@@ -1,0 +1,29 @@
+void main {
+  let void name;
+  let void age;
+  let bool alive;
+  let float res;
+  let float input;
+
+  input := readIO();
+
+  res := fibonacci(7.0);
+  printIO res;
+
+  if (res < 8.0) {
+    printIO true;
+  };
+
+  while false do {
+    printIO 9.7;
+  };
+
+}
+
+def float fibonacci(float num) {
+  let float last;
+
+  last := 1.0;
+  
+  return last;
+}
