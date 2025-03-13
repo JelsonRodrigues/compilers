@@ -1,6 +1,7 @@
 PARSER_BEGIN(Lugosi)
 import java.io.*;
 import ast.*;
+import java.util.ArrayList;
 
 public class Lugosi {
 
@@ -95,7 +96,7 @@ ArrayList<VarDecl> vardecl() :
   Token id;
 }
 {
-  (<LET> type=tipo() id=<ID> <SEMICOLON> {building_vars.append(new VarDecl(type, id));})*
+  (<LET> type=tipo() id=<ID> <SEMICOLON> {building_vars.addLast(new VarDecl(type, id.image));})*
   {return building_vars;}
 }
 
@@ -113,7 +114,7 @@ ArrayList<Comando> seqcomandos() :
   Comando com;
 }
 {
-  (com=comando() {coms_building.append(com);})*
+  (com=comando() {coms_building.addLast(com);})*
   {return coms_building;}
 }
 
@@ -122,13 +123,14 @@ Comando comando() :
   Token id;
   Exp exp;
   Comando com;
+  ArrayList<Comando> seq = new ArrayList();
 }
 {
-  (id=<ID> com=idL(id.image, id.beginLine) 
-  | <IF> exp=exp() <ACHAVES> seqcomandos() <FCHAVES> <SEMICOLON>
-  | <WHILE> exp() <DO> <ACHAVES> seqcomandos() <FCHAVES> <SEMICOLON>
-  | <RETURN> exp() <SEMICOLON>
-  | <PRINTIO> exp() <SEMICOLON>)
+  (id=<ID> com=idL(id.image, id.beginLine) {return com;}
+  | <IF> exp=exp() <ACHAVES> seq=seqcomandos() <FCHAVES> <SEMICOLON> {return new CIf(0, exp, seq);}
+  | <WHILE> exp=exp() <DO> <ACHAVES> seq=seqcomandos() <FCHAVES> <SEMICOLON> {return new CWhile(0, exp, seq);}
+  | <RETURN> exp=exp() <SEMICOLON> { return new CReturn(0, exp);}
+  | <PRINTIO> exp=exp() <SEMICOLON> {return new CPrint(0, exp);})
 }
 
 Comando idL(String var, int line) :
@@ -139,11 +141,11 @@ Comando idL(String var, int line) :
 }
 {
   <ASSINGMENT> com=assignmentL(var, line) {return com;}
-  | <OPEN_PARENTHESIS> (listaexp(building_exp))? <CLOSE_PARENTHESIS> <SEMICOLON> { return new EChamadaFun(line, var, building_exp);}
+  | <OPEN_PARENTHESIS> (listaexp(building_exp))? <CLOSE_PARENTHESIS> <SEMICOLON> { return new CChamadaFun(line, var, building_exp);}
 }
 
 Comando assignmentL(String var, int line) :
-{}
+{Exp exp;}
 {
 (exp=exp() <SEMICOLON> {return new CAtribuicao(line, var, exp);}
 | <READIO> <OPEN_PARENTHESIS> <CLOSE_PARENTHESIS> <SEMICOLON> {return new CReadInput(line, var);}
@@ -161,7 +163,7 @@ Exp exp() :
   | ex1=fator() {return ex1;})
 }
 
-Exp fator(Exp exp) :
+Exp fator() :
 {
   Token id;
   boolean matched_func = false;
@@ -175,12 +177,12 @@ Exp fator(Exp exp) :
     }
     return new EVar(id.image);
   }
-  | id=<NUM> {return new EFloat(Float.parse(id.image));}
+  | id=<NUM> {return new EFloat(Float.parseFloat(id.image));}
   | <TRUE> {return new ETrue();}
   | <FALSE> {return new EFalse();}
 }
 
-String op(String operation) :
+String op() :
 {}
 {
   <OP_PLUS> { return "+";}
@@ -198,7 +200,7 @@ ArrayList<Exp> listaexp(ArrayList<Exp> building_exp) :
 {Exp ex1;
 Exp ex2;}
 {
-  (ex1=exp() {building_exp.append(ex1);} (<COMMA> ex2=exp() {building_exp.append(ex2);})*)
+  (ex1=exp() {building_exp.addLast(ex1);} (<COMMA> ex2=exp() {building_exp.addLast(ex2);})*)
   {return building_exp;}
 }
 
@@ -207,14 +209,14 @@ ArrayList<Fun> func () :
 {
   String type;
   ArrayList<Fun> building_functions = new ArrayList();
-  ArrayList<ParamFormalFun> args;
-  ArrayList<VarDecl> vardecl;
-  ArrayList<Comando> commands;
+  ArrayList<ParamFormalFun> args = new ArrayList();
+  ArrayList<VarDecl> vardecl = new ArrayList();
+  ArrayList<Comando> commands = new ArrayList();
   Token id;
 }
 {
   (<DEF> type=tipo() id=<ID> <OPEN_PARENTHESIS> (args=listaarg())? <CLOSE_PARENTHESIS> <ACHAVES> vardecl=vardecl() commands=seqcomandos() <FCHAVES> 
-  {building_functions.append(new Fun(id.image, args, type, vardecl, commands));}
+  {building_functions.addLast(new Fun(id.image, args, type, vardecl, commands));}
   )+
   {return building_functions;}
 }
@@ -226,6 +228,6 @@ ArrayList<ParamFormalFun> listaarg():
   Token id;
 }
 {
-  type=tipo() id=<ID> {building_args.append(new ParamFormalFun(type, id.image));} (<COMMA> type=tipo() id=<ID> {building_args.append(new ParamFormalFun(type, id.image));})*
+  type=tipo() id=<ID> {building_args.addLast(new ParamFormalFun(type, id.image));} (<COMMA> type=tipo() id=<ID> {building_args.addLast(new ParamFormalFun(type, id.image));})*
   {return building_args;}
 }
