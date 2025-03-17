@@ -4,26 +4,32 @@ void main {
   let bool alive;
   let float res;
   let float input;
-
+  let float counter;
+  
   input := readIO();
 
-  res := fibonacci(7.0);
+  res := fibonacci(input);
   printIO res;
 
   if (res < 8.0) {
     printIO true;
   };
 
-  while false do {
-    printIO 9.7;
+  counter := 0.0;
+  while (counter < 3.0) do {
+    printIO counter;
+    counter := (counter + 1.0);
   };
 
 }
 
 def float fibonacci(float num) {
-  let float last;
+  if (num == 0) {
+    return 0;
+  };
+  if (num == 1) {
+    return 1;
+  };
 
-  last := 1.0;
-  
-  return last;
+  return (fibonacci((num-1)) + fibonacci((num-2)));
 }
