@@ -36,9 +36,9 @@ COPY . /src
 WORKDIR /src
 RUN make 
 
-WORKDIR ./bin
+WORKDIR ./bin/class
 
 # ENV INPUT_FILE ""
 RUN ls -la 
 RUN java --version
-ENTRYPOINT java Lugosi.java /input.txt
+ENTRYPOINT java Lugosi /input.txt
