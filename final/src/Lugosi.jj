@@ -96,7 +96,7 @@ ArrayList<VarDecl> vardecl() :
   Token id;
 }
 {
-  (<LET> type=tipo() id=<ID> <SEMICOLON> {building_vars.addLast(new VarDecl(type, id.image));})*
+  (<LET> type=tipo() id=<ID> <SEMICOLON> {building_vars.add(new VarDecl(type, id.image));})*
   {return building_vars;}
 }
 
@@ -114,7 +114,7 @@ ArrayList<Comando> seqcomandos() :
   Comando com;
 }
 {
-  (com=comando() {coms_building.addLast(com);})*
+  (com=comando() {coms_building.add(com);})*
   {return coms_building;}
 }
 
@@ -200,7 +200,7 @@ ArrayList<Exp> listaexp(ArrayList<Exp> building_exp) :
 {Exp ex1;
 Exp ex2;}
 {
-  (ex1=exp() {building_exp.addLast(ex1);} (<COMMA> ex2=exp() {building_exp.addLast(ex2);})*)
+  (ex1=exp() {building_exp.add(ex1);} (<COMMA> ex2=exp() {building_exp.add(ex2);})*)
   {return building_exp;}
 }
 
@@ -216,7 +216,7 @@ ArrayList<Fun> func () :
 }
 {
   (<DEF> type=tipo() id=<ID> <OPEN_PARENTHESIS> (args=listaarg())? <CLOSE_PARENTHESIS> <ACHAVES> vardecl=vardecl() commands=seqcomandos() <FCHAVES> 
-  {building_functions.addLast(new Fun(id.image, args, type, vardecl, commands));}
+  {building_functions.add(new Fun(id.image, args, type, vardecl, commands));}
   )+
   {return building_functions;}
 }
@@ -228,6 +228,6 @@ ArrayList<ParamFormalFun> listaarg():
   Token id;
 }
 {
-  type=tipo() id=<ID> {building_args.addLast(new ParamFormalFun(type, id.image));} (<COMMA> type=tipo() id=<ID> {building_args.addLast(new ParamFormalFun(type, id.image));})*
+  type=tipo() id=<ID> {building_args.add(new ParamFormalFun(type, id.image));} (<COMMA> type=tipo() id=<ID> {building_args.add(new ParamFormalFun(type, id.image));})*
   {return building_args;}
 }
