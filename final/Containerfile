@@ -1,0 +1,44 @@
+# FROM docker.io/debian:latest AS build
+
+# # Update packages and install necessary dependencies
+
+# RUN apt update && apt upgrade -y
+# RUN apt install -y javacc make default-jdk
+
+# # Make the binaries
+
+# COPY . /src
+# WORKDIR /src
+# RUN make 
+
+# # Run 
+# FROM docker.io/eclipse-temurin:21-jdk-alpine AS production
+
+# COPY --from=build /src/bin /app
+
+# WORKDIR /app
+
+# ENV INPUT_FILE ""
+
+# ENTRYPOINT java Lugosi.java $INPUT_FILE
+
+
+FROM docker.io/debian:latest AS build
+
+# Update packages and install necessary dependencies
+
+RUN apt update && apt upgrade -y
+RUN apt install -y javacc make default-jdk
+
+# Make the binaries
+
+COPY . /src
+WORKDIR /src
+RUN make 
+
+WORKDIR ./bin
+
+# ENV INPUT_FILE ""
+RUN ls -la 
+RUN java --version
+ENTRYPOINT java Lugosi.java /input.txt
